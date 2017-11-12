@@ -280,6 +280,6 @@ function rmvirtualenv {
 #
 # Powershell alias for naming convention
 #
-Alias Get-VirtualEnvs lsvirtualenv 
-Alias Remove-VirtualEnv rmvirtualenv
-Alias New-VirtualEnv mkvirtualenv
+Set-Alias Get-VirtualEnvs lsvirtualenv 
+Set-Alias Remove-VirtualEnv rmvirtualenv
+Set-Alias New-VirtualEnv mkvirtualenv
