@@ -21,19 +21,25 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+$WORKON_HOME=$Env:WORKON_HOME
+$VIRTUALENWRAPPER_HOOK_DIR=''
+
 #
 # Set the default path and create the directory if don't exist
 #
-$virtualenvwrapper_home = "$Env:USERPROFILE\Envs"
-if ((Test-Path $virtualenvwrapper_home) -eq $false) {
-    mkdir $virtualenvwrapper_home
+if (!$WORKON_HOME) {
+    $WORKON_HOME = "$Env:USERPROFILE\Envs"
+}
+
+if ((Test-Path $WORKON_HOME) -eq $false) {
+    mkdir $WORKON_HOME
 }
 
 #
 # Get the absolute path for the environment
 #
 function Get-FullPyEnvPath($pypath) {
-    return ("{0}\{1}" -f $virtualenvwrapper_home, $pypath)
+    return ("{0}\{1}" -f $WORKON_HOME, $pypath)
 }
 
 # 
@@ -88,7 +94,7 @@ function Get-PythonVersion($Python) {
 # $Command contains either the Py2 or Py3 command
 #
 function Invoke-CreatePyEnv($Command, $Name) {
-    $NewEnv = Join-Path $virtualenvwrapper_home $Name
+    $NewEnv = Join-Path $WORKON_HOME $Name
     Write-Host "Creating virtual env... "
     
     Invoke-Expression "$Command $NewEnv"
@@ -280,7 +286,7 @@ function New-VirtualEnv {
 # Check if there is an environment named $Name
 #
 function IsPyEnvExists($Name) {
-    $children = Get-ChildItem $virtualenvwrapper_home
+    $children = Get-ChildItem $WORKON_HOME
 
     if ($children.Length -gt 0) {
         for ($i=0; $i -lt $children.Length; $i++) {
@@ -294,7 +300,7 @@ function IsPyEnvExists($Name) {
 }
 
 function Get-VirtualEnvs {
-    $children = Get-ChildItem $virtualenvwrapper_home
+    $children = Get-ChildItem $WORKON_HOME
     Write-Host
     Write-Host "`tPython Virtual Environments available"
     Write-Host
@@ -305,7 +311,7 @@ function Get-VirtualEnvs {
     if ($children.Length) {
         for($i = 0; $i -lt $children.Length; $i++) {
             $child = $children[$i]
-            $PythonVersion = (((Invoke-Expression ("$virtualenvwrapper_home\{0}\Scripts\Python.exe --version 2>&1" -f $child)) -replace "`r|`n","") -Split " ")[1]
+            $PythonVersion = (((Invoke-Expression ("$WORKON_HOME\{0}\Scripts\Python.exe --version 2>&1" -f $child)) -replace "`r|`n","") -Split " ")[1]
             Write-host ("`t{0,-30}{1,-15}" -f $child,$PythonVersion)
         }
     } else {

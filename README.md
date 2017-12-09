@@ -22,6 +22,11 @@ The virtual environments directory is set into your personnal directory : `~/Env
 
 Where `~` is your personnal directory.
 
+If you want to set your environment. Just add and variable environment called :
+
+`WORKON_HOME` (as in Unix/Linux system).
+
+
 ## Usage
 
 The module add few commands in Powershell : 
