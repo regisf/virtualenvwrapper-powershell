@@ -204,7 +204,7 @@ function Get-IsInPythonVenv($Name) {
 }
 
 # Now, work on a env
-function workon {
+function Workon {
     Param(
         [string] $Name
     )
@@ -231,6 +231,9 @@ function workon {
     }
     
     . $activate_path
+
+    $Env:OLD_PYTHON_PATH = $Env:PYTHON_PATH
+    $Env:VIRTUAL_ENV = "$new_pyenv"
 }
 
 # 
