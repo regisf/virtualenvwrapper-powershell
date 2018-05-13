@@ -6,9 +6,18 @@ Unless the previous version of my estimated colleague [Guillermo Lòpez](https:/
 
 ## Installation
 
-For now, there's not automatic installation. Put the file `VirtualEnvWrapper.psm1`
-into the directory `~\Documents\WindowsPowerShell\Modules`.
-Edit or create the file `~\Documents\WindowsPowerShell\WindowsPowerShell_profile.ps1`
+Just use the `Install.ps1` script:
+
+```powershell
+./Install.ps1
+```
+
+and the script will create required path if needed and install the `profile.ps1` file directly to 
+automaticly activate VirtualEnvWrapper when the shell is opened
+
+###Manual Installation 
+Put the file `VirtualEnvWrapper.psm1` into the directory `~\Documents\WindowsPowerShell\Modules`.
+Edit or create the file `~\Documents\WindowsPowerShell\Profile.ps1` (see )
 and add into the lines below :
 
 ```powershell
@@ -34,7 +43,8 @@ The module add few commands in Powershell :
 * `lsvirtualenv` (alias: Get-VirtualEnvs) : List all Virtual environments
 * `mkvirtualenv` (alias: New-VirtualEnv) : Ceate a new virtual environment
 * `rmvirtualenv` (alias: Remove-VirtualEnv) : Remove an existing virtual environment
-* `Workon`: Activate an existing virtual environment
+* `workon`: Activate an existing virtual environment
+* `Get-VirtualEnvsVersion`: to display the current version.
 
 ### Create a virtual environment
 
