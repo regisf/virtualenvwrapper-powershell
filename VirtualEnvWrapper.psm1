@@ -139,14 +139,28 @@ function New-Python3Env($Python, $Name) {
 # Find python.exe in the path. If $Python is given, try with the given path
 #
 function Find-Python ($Python) {
+    # The path contains the python executable
+    if ($Python.EndsWith('python.exe'))
+    {
+        if (!(Test-Path $Python)) 
+        {
+            return $false
+        }
+
+        return $Python
+    }
+
+    # No python given, get the default one
     if (!$Python) {
         return Get-Command "python.exe" | Select-Object -ExpandProperty Source
     }
 
+    # The python path doesn't exist
     if (!(Test-Path $Python)) {
         return $false
     }
     
+    # The pas is a directory path not a executable path
     $PythonExe = Join-Path $Python "python.exe"
     if (!(Test-Path $PythonExe)) {
         return $false
