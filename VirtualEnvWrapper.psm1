@@ -1,4 +1,4 @@
-﻿#
+#
 # Python virtual env manager inspired by VirtualEnvWrapper
 #
 # Copyright (c) 2017 Regis FLORET
@@ -73,7 +73,7 @@ function Get-PythonVersion($Python) {
         return
     }
 
-    $python_version = Invoke-Expression "$Python --version 2>&1"
+    $python_version = Invoke-Expression "& '$Python' --version 2>&1"
     if (!$Python -and !$python_version) {
         Write-Host "I don't find any Python version into your path" -ForegroundColor Red
         return 
@@ -98,7 +98,7 @@ function Invoke-CreatePyEnv($Command, $Name) {
     $NewEnv = Join-Path $WORKON_HOME $Name
     Write-Host "Creating virtual env... "
     
-    Invoke-Expression "$Command $NewEnv"
+    Invoke-Expression "$Command '$NewEnv'"
     
     $VEnvScritpsPath = Join-Path $NewEnv "Scripts"
     $ActivatepPath = Join-Path $VEnvScritpsPath "activate.ps1"
@@ -111,7 +111,7 @@ function Invoke-CreatePyEnv($Command, $Name) {
 # Create Python Environment using the VirtualEnv.exe command
 #
 function New-Python2Env($Python, $Name) {
-    $Command = (Join-Path (Join-Path (Split-Path $Python -Parent) "Scripts") "virtualenv.exe")
+    $Command = ("& '" (Join-Path (Join-Path (Split-Path $Python -Parent) "Scripts") "virtualenv.exe'")
     if ((Test-Path $Command) -eq $false) {
         Write-FormatedError "You must install virtualenv program to create the Python virtual environment '$Name'"
         return 
@@ -130,7 +130,7 @@ function New-Python3Env($Python, $Name) {
         $PythonExe = Join-Path (Split-Path $Python -Parent) "python.exe"
     }
 
-    $Command = "$PythonExe -m venv"
+    $Command = "& '$PythonExe' -m venv"
 
     Invoke-CreatePyEnv $Command $Name
 }
