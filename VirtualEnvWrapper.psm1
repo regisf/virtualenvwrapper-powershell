@@ -364,7 +364,7 @@ function Remove-VirtualEnv {
     $full_path = Get-FullPyEnvPath $Name
     if ((Test-Path $full_path) -eq $true) {
         Remove-Item -Path $full_path -Recurse 
-        Write-FormatedSuccess "$Name was deleted permantly"
+        Write-FormatedSuccess "$Name was deleted permanently"
     } else {
         Write-FormatedError "$Name not found"
     }
