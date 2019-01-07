@@ -73,7 +73,7 @@ function Get-PythonVersion($Python) {
         return
     }
 
-    $python_version = Invoke-Expression "$Python --version 2>&1"
+    $python_version = Invoke-Expression "& '$Python' --version 2>&1"
     if (!$Python -and !$python_version) {
         Write-Host "I don't find any Python version into your path" -ForegroundColor Red
         return 
@@ -130,7 +130,7 @@ function New-Python3Env($Python, $Name) {
         $PythonExe = Join-Path (Split-Path $Python -Parent) "python.exe"
     }
 
-    $Command = "$PythonExe -m venv"
+    $Command = "& '$PythonExe' -m venv"
 
     Invoke-CreatePyEnv $Command $Name
 }
