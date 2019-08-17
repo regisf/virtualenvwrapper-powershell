@@ -34,12 +34,24 @@ if (!(Test-Path $InstallationPath))
 
 Copy-Item VirtualEnvWrapper.psm1 $InstallationPath\VirtualEnvWrapper.psm1
 
-if (!(Test-Path (Join-Path $PowerShellPath Profile.ps1)))
+# If Powershell profile doesn't exist, add it with necessary contents
+# Otherwise append contents to existing profile
+if (!(Test-Path $profile))
 {
     $key = Ask-User "The powershell profile is missing. Do you want to create it?"
     if ($key -eq "y")
     {
-        Copy-Item Profile.ps1 $PowerShellPath\Profile.ps1
+        Copy-Item Profile.ps1 $profile
+    }
+}
+else
+{
+    $From = Get-Content -Path Profile.ps1
+
+    if(!(Select-String -SimpleMatch "VirtualEnvWrapper.psm1" -Path $profile))
+    {
+        Add-Content -Path $profile -Value "`r`n"
+        Add-Content -Path $profile -Value $From
     }
 }
 
