@@ -98,7 +98,7 @@ function Invoke-CreatePyEnv($Command, $Name) {
     $NewEnv = Join-Path $WORKON_HOME $Name
     Write-Host "Creating virtual env... "
     
-    Invoke-Expression "$Command $NewEnv"
+    Invoke-Expression "$Command '$NewEnv'"
     
     $VEnvScritpsPath = Join-Path $NewEnv "Scripts"
     $ActivatepPath = Join-Path $VEnvScritpsPath "activate.ps1"
@@ -110,8 +110,8 @@ function Invoke-CreatePyEnv($Command, $Name) {
 #
 # Create Python Environment using the VirtualEnv.exe command
 #
-function New-Python2Env($Python, $Name) {
-    $Command = (Join-Path (Join-Path (Split-Path $Python -Parent) "Scripts") "virtualenv.exe")
+function New-Python2Env($Python, $Name)  {
+    $Command = (Join-Path (Join-Path (Split-Path $Python -Parent) "Scripts") "virtualenv.exe'")
     if ((Test-Path $Command) -eq $false) {
         Write-FormatedError "You must install virtualenv program to create the Python virtual environment '$Name'"
         return 
