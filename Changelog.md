@@ -1,5 +1,9 @@
 # Changelog for VirtualEnvWrapper Powershell
 
+## 2019-11-10 (v0.1.1)
+	* Partially merge Swiffer PR
+	* Start tagging
+	
 ## 2015-05-13
 	* Fix bug #1 (thanks to franciscosucre)
 	* Add installation script
