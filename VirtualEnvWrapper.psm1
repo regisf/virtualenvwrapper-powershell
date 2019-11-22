@@ -172,7 +172,7 @@ function Find-Python ($Python) {
 #
 # Create the Python Environment regardless the Python version
 #
-function New-PythonEnv($Python, $Name, $Packages, $Append, $RequirementFile) {
+function New-PythonEnv($Python, $Name, $Packages, $Append) {
     $version = Get-PythonVersion $Python
     
     BackupPath
@@ -181,13 +181,14 @@ function New-PythonEnv($Python, $Name, $Packages, $Append, $RequirementFile) {
     }
 
     if ($Version -eq "2") {
-        New-Python2Env -Python $Python -Name $Name -Packages $Packages -RequirementFile $Requirement
+        New-Python2Env -Python $Python -Name $Name 
     } elseif ($Version -eq "3") {
-        New-Python3Env -Python $Python -Name $Name -Packages $Packages -RequirementFile $Requirement
+        New-Python3Env -Python $Python -Name $Name 
     } else {
         Write-FormatedError "This is the debug voice. I expected a Python version, got $Version"
         RestorePath
-    }
+        
+    }    
 }
 
 function BackupPath {
@@ -261,7 +262,7 @@ function New-VirtualEnv {
 
         [Parameter(HelpMessage="The requirements file")]
         [alias("r")]
-        [string]$RequirementFile,
+        [string]$Requirement,
 
         [Parameter(HelpMessage="The Python directory where the python.exe lives")]
         [string]$Python,
@@ -270,9 +271,9 @@ function New-VirtualEnv {
         [alias("i")]
         [string[]]$Packages,
 
-        [Parameter(HelpMessage="Add an existing project directory to the new environment")]
+        [Parameter(HelpMessage="Associate an existing project directory to the new environment")]
         [alias("a")]
-        [string]$Append
+        [string]$Associate
     )
 
     if ($Name.StartsWith("-")) {
@@ -301,7 +302,22 @@ function New-VirtualEnv {
         return
     }
 
-    New-PythonEnv -Python $PythonRealPath -Name $Name -Packages $Packages -Append $Append  -RequirementFile $Requirement
+    New-PythonEnv -Python $PythonRealPath -Name $Name 
+    
+    foreach($Package in $Packages)  {
+        Invoke-Expression "$WORKON_HOME\$Name\Scripts\pip.exe install $Package"
+    }
+
+
+    if ($Requirement -ne "") {
+        if (! $(Test-Path $Requirement)) {
+            Write-Error "The requirement file doesn't exist"
+            Break
+        }
+
+        Invoke-Expression "$WORKON_HOME\$Name\Scripts\pip.exe install -r $Requirement"
+    }
+ 
 }
 
 
@@ -380,6 +396,9 @@ function Get-VirtualEnvVersion() {
 #
 # Powershell alias for naming convention
 #
-New-Alias lsvirtualenv Get-VirtualEnvs  
-New-Alias rmvirtualenv Remove-VirtualEnv 
-New-Alias mkvirtualenv New-VirtualEnv
+Set-Alias lsvirtualenv Get-VirtualEnvs  
+Set-Alias rmvirtualenv Remove-VirtualEnv 
+Set-Alias mkvirtualenv New-VirtualEnv
+
+
+Write-Host "Virtual Env Wrapper for Powershell activated"
