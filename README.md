@@ -60,6 +60,16 @@ will create and virtual environment named `MyProject` located at `~\Envs` with t
 
 If the `-Python` option is not set, the python command set in your path is used by default.
 
+Options are:
+
+* `-Name` : The new environment name
+* `-Packages` or `-i` : Install packages separated by a coma (Note: this differs from [original virtualenvwrapper](https://bitbucket.org/virtualenvwrapper/virtualenvwrapper/src/master/) )
+* `-Associate` or `-a`: Still todo
+* `-Requirement` or `-r`: The requirement file to load. 
+
+If both options Packages and Requirement are set, the script will install first the packages then the requirements as in original Bash script.
+
+
 ### List virtual environments
 
 Type
@@ -107,3 +117,11 @@ Just type `deactivate` as usual (Python default).
 
 * Activate the autocompletion
 * Set the virtualenvwrapper options into system environment variables (see the main project)
+
+### Development
+
+A script `InstallDev.ps1` exists to simplify the development. Invoke it with:
+
+    $ .\InstallDev.ps1 
+
+will unload `VirtualEnvWrapper.ps1` from memory and reload it.
