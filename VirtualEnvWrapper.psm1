@@ -21,8 +21,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-Write-Host $("le chemin du projet est : " + $ProjectPath);
-
 $WORKON_HOME=$Env:WORKON_HOME
 $VIRTUALENWRAPPER_HOOK_DIR=''
 $Version = "0.2.0"
@@ -273,9 +271,9 @@ function New-VirtualEnv {
         [alias("i")]
         [string[]]$Packages,
 
-        [Parameter(HelpMessage="Add an existing project directory to the new environment")]
+        [Parameter(HelpMessage="Associate an existing project directory to the new environment")]
         [alias("a")]
-        [string]$Append
+        [string]$Associate
     )
 
     if ($Name.StartsWith("-")) {
@@ -304,8 +302,13 @@ function New-VirtualEnv {
         return
     }
 
-    New-PythonEnv -Python $PythonRealPath -Name $Name -Packages $Packages -Append $Append
+    New-PythonEnv -Python $PythonRealPath -Name $Name 
     
+    foreach($Package in $Packages)  {
+        Invoke-Expression "$WORKON_HOME\$Name\Scripts\pip.exe install $Package"
+    }
+
+
     if ($Requirement -ne "") {
         if (! $(Test-Path $Requirement)) {
             Write-Error "The requirement file doesn't exist"
@@ -314,7 +317,7 @@ function New-VirtualEnv {
 
         Invoke-Expression "$WORKON_HOME\$Name\Scripts\pip.exe install -r $Requirement"
     }
-    
+ 
 }
 
 
