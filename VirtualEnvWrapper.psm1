@@ -112,6 +112,7 @@ function Invoke-CreatePyEnv($Command, $Name) {
 #
 function New-Python2Env($Python, $Name)  {
     $Command = (Join-Path (Join-Path (Split-Path $Python -Parent) "Scripts") "virtualenv.exe")
+
     if ((Test-Path $Command) -eq $false) {
         Write-FormatedError "You must install virtualenv program to create the Python virtual environment '$Name'"
         return
@@ -255,7 +256,8 @@ function Workon {
 #
 # Create a new virtual environment.
 #
-function New-VirtualEnv {
+function New-VirtualEnv()
+{
     Param(
         [Parameter(HelpMessage="The virtual env name")]
         [string]$Name,
@@ -317,7 +319,6 @@ function New-VirtualEnv {
 
         Invoke-Expression "$WORKON_HOME\$Name\Scripts\pip.exe install -r $Requirement"
     }
- 
 }
 
 
@@ -397,7 +398,74 @@ function Get-VirtualEnvVersion() {
 # Create a temporary environment
 #
 function New-TemporaryVirtualEnv() {
+    Param(
+        [Parameter(HelpMessage="Change directory into the newly created virtual environment")]
+        [alias("c")]
+        [switch]$Cd = $true,
 
+        [Parameter(HelpMessage="Don't change directory")]
+        [alias("n")]
+        [switch]$NoCd = $false,
+
+        # Reimplement New-VirtualEnv parameters
+
+        [Parameter(HelpMessage="The requirements file")]
+        [alias("r")]
+        [string]$Requirement,
+
+        [Parameter(HelpMessage="The Python directory where the python.exe lives")]
+        [string]$Python,
+
+        [Parameter(HelpMessage="The package to install. Repeat the parameter for more than one")]
+        [alias("i")]
+        [string[]]$Packages,
+
+        [Parameter(HelpMessage="Associate an existing project directory to the new environment")]
+        [alias("a")]
+        [string]$Associate
+    )
+
+    Begin
+    {
+        if ($NoCd -eq $true) {
+            $Cd = $false;
+        }
+    }
+
+    Process
+    {
+        $uuid = (Invoke-Expression "python -c 'import uuid; print(str(uuid.uuid4()))'")
+        $dest_dir = "$WORKON_HOME/$uuid"
+
+        # Recompose command line
+        $args = ""
+        foreach($param in $PSBoundParameters.GetEnumerator())
+        {
+            $args += (" -{0} {1}" -f $param.Key,$param.Value)
+        }
+
+        Invoke-Expression "New-VirtualEnv $uuid $args"
+
+        $message = "This is a temporary environment. It will be deleted when you run 'deactivate'."
+        Write-Host $message
+        $message | Out-File -FilePath "$dest_dir/README.tmpenv"
+
+        # Write deactivation file. See Workon rewriting deactivate feature
+        $post_deactivate_file_content = @"
+if ((Test-Path -Path `"$dest_dir/README.tmpenv`") -Eq `$true) {
+    Write-Host `"Removing temporary environment $uuid`"
+    # Change the location else MS Windows will refuse to remove the directory
+    Set-Location `"$WORKON_HOME`" 
+    Remove-VirtualEnv $uuid
+}
+"@
+
+        $post_deactivate_file_content | Out-File -FilePath "$WORKON_HOME/$uuid/postdeactivate.ps1"
+
+        if ($Cd -Eq $true) {
+            Set-Location -Path "$WORKON_HOME/$uuid"
+        }
+    }
 }
 
 #
@@ -406,6 +474,6 @@ function New-TemporaryVirtualEnv() {
 Set-Alias lsvirtualenv Get-VirtualEnvs
 Set-Alias rmvirtualenv Remove-VirtualEnv
 Set-Alias mkvirtualenv New-VirtualEnv
-Set-Alias mktempenv New-TemporaryVirtualEnv
+Set-Alias mktmpenv New-TemporaryVirtualEnv
 
 Write-Host "Virtual Env Wrapper for Powershell activated"
