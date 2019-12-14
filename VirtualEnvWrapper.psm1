@@ -2,17 +2,17 @@
 # Python virtual env manager inspired by VirtualEnvWrapper
 #
 # Copyright (c) 2017 Regis FLORET
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -43,29 +43,29 @@ function Get-FullPyEnvPath($pypath) {
     return ("{0}\{1}" -f $WORKON_HOME, $pypath)
 }
 
-# 
+#
 # Display a formated error message
 #
 function Write-FormatedError($err) {
-    Write-Host 
+    Write-Host
     Write-Host "  ERROR: $err" -ForegroundColor Red
-    Write-Host 
+    Write-Host
 }
 
 #
 # Display a formated success messge
 #
 function Write-FormatedSuccess($err) {
-    Write-Host 
+    Write-Host
     Write-Host "  SUCCESS: $err" -ForegroundColor Green
-    Write-Host 
+    Write-Host
 }
 
 #
-# Retrieve the python version with the path the python exe regarding the version. 
+# Retrieve the python version with the path the python exe regarding the version.
 # Python < 3.3 is for this function a Python 2 because the module venv comes with python 3.3
 #
-# Return the major version of python 
+# Return the major version of python
 #
 function Get-PythonVersion($Python) {
     if (!(Test-Path $Python)) {
@@ -76,30 +76,30 @@ function Get-PythonVersion($Python) {
     $python_version = Invoke-Expression "& '$Python' --version 2>&1"
     if (!$Python -and !$python_version) {
         Write-Host "I don't find any Python version into your path" -ForegroundColor Red
-        return 
+        return
     }
 
     $is_version_2 = ($python_version -match "^Python\s2") -or ($python_version -match "^Python\s3.3")
     $is_version_3 = $python_version -match "^Python\s3" -and !$is_version_2
-    
+
     if (!$is_version_2 -and !$is_version_3) {
         Write-FormatedError "Unknown Python Version expected Python 2 or Python 3 got $python_version"
-        return 
+        return
     }
 
     return $(if ($is_version_2) {"2"} else {"3"})
 }
 
 #
-# Common command to create the Python Virtual Environement. 
+# Common command to create the Python Virtual Environement.
 # $Command contains either the Py2 or Py3 command
 #
 function Invoke-CreatePyEnv($Command, $Name) {
     $NewEnv = Join-Path $WORKON_HOME $Name
     Write-Host "Creating virtual env... "
-    
+
     Invoke-Expression "$Command '$NewEnv'"
-    
+
     $VEnvScritpsPath = Join-Path $NewEnv "Scripts"
     $ActivatepPath = Join-Path $VEnvScritpsPath "activate.ps1"
     . $ActivatepPath
@@ -114,15 +114,15 @@ function New-Python2Env($Python, $Name)  {
     $Command = (Join-Path (Join-Path (Split-Path $Python -Parent) "Scripts") "virtualenv.exe")
     if ((Test-Path $Command) -eq $false) {
         Write-FormatedError "You must install virtualenv program to create the Python virtual environment '$Name'"
-        return 
+        return
     }
 
     Invoke-CreatePyEnv $Command $Name
 }
-    
-# 
+
+#
 # Create Python Environment using the venv module
-# 
+#
 function New-Python3Env($Python, $Name) {
     if (!$Python) {
         $PythonExe = Find-Python
@@ -142,7 +142,7 @@ function Find-Python ($Python) {
     # The path contains the python executable
     if ($Python.EndsWith('python.exe'))
     {
-        if (!(Test-Path $Python)) 
+        if (!(Test-Path $Python))
         {
             return $false
         }
@@ -159,7 +159,7 @@ function Find-Python ($Python) {
     if (!(Test-Path $Python)) {
         return $false
     }
-    
+
     # The pas is a directory path not a executable path
     $PythonExe = Join-Path $Python "python.exe"
     if (!(Test-Path $PythonExe)) {
@@ -174,21 +174,21 @@ function Find-Python ($Python) {
 #
 function New-PythonEnv($Python, $Name, $Packages, $Append) {
     $version = Get-PythonVersion $Python
-    
+
     BackupPath
     if ($Append) {
         $Env:PYTHONPATH = "$Append;$($Env:PYTHONPATH)"
     }
 
     if ($Version -eq "2") {
-        New-Python2Env -Python $Python -Name $Name 
+        New-Python2Env -Python $Python -Name $Name
     } elseif ($Version -eq "3") {
-        New-Python3Env -Python $Python -Name $Name 
+        New-Python3Env -Python $Python -Name $Name
     } else {
         Write-FormatedError "This is the debug voice. I expected a Python version, got $Version"
         RestorePath
-        
-    }    
+
+    }
 }
 
 function BackupPath {
@@ -200,7 +200,7 @@ function RestorePath {
     $Env:Path = $Env:OLD_SYSTEM_PATH
 }
 
-# 
+#
 # Test if there's currently a python virtual env
 #
 function Get-IsInPythonVenv($Name) {
@@ -245,15 +245,15 @@ function Workon {
         Write-FormatedError "Enable to find the activation script. You Python environment $Name seems compromized"
         return
     }
-    
+
     . $activate_path
 
     $Env:OLD_PYTHON_PATH = $Env:PYTHON_PATH
     $Env:VIRTUAL_ENV = "$new_pyenv"
 }
 
-# 
-# Create a new virtual environment. 
+#
+# Create a new virtual environment.
 #
 function New-VirtualEnv {
     Param(
@@ -302,8 +302,8 @@ function New-VirtualEnv {
         return
     }
 
-    New-PythonEnv -Python $PythonRealPath -Name $Name 
-    
+    New-PythonEnv -Python $PythonRealPath -Name $Name
+
     foreach($Package in $Packages)  {
         Invoke-Expression "$WORKON_HOME\$Name\Scripts\pip.exe install $Package"
     }
@@ -366,7 +366,7 @@ function Remove-VirtualEnv {
     Param(
         [string]$Name
     )
-    
+
     if ((Get-IsInPythonVenv $Name) -eq $true) {
         Write-FormatedError "You want to destroy the Virtual Env you are in. Please type 'deactivate' before to dispose the environment before"
         return
@@ -379,7 +379,7 @@ function Remove-VirtualEnv {
 
     $full_path = Get-FullPyEnvPath $Name
     if ((Test-Path $full_path) -eq $true) {
-        Remove-Item -Path $full_path -Recurse 
+        Remove-Item -Path $full_path -Recurse
         Write-FormatedSuccess "$Name was deleted permanently"
     } else {
         Write-FormatedError "$Name not found"
@@ -394,11 +394,18 @@ function Get-VirtualEnvVersion() {
 }
 
 #
+# Create a temporary environment
+#
+function New-TemporaryVirtualEnv() {
+
+}
+
+#
 # Powershell alias for naming convention
 #
-Set-Alias lsvirtualenv Get-VirtualEnvs  
-Set-Alias rmvirtualenv Remove-VirtualEnv 
+Set-Alias lsvirtualenv Get-VirtualEnvs
+Set-Alias rmvirtualenv Remove-VirtualEnv
 Set-Alias mkvirtualenv New-VirtualEnv
-
+Set-Alias mktempenv New-TemporaryVirtualEnv
 
 Write-Host "Virtual Env Wrapper for Powershell activated"
