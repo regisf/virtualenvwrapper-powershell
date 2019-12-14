@@ -2,5 +2,9 @@
 # Easy way to load the module for the developement
 #
 
-Remove-Module VirtualEnvWrapper
+try {
+    Remove-Module VirtualEnvWrapper
+} catch {
+}
+
 Import-Module ./VirtualEnvWrapper
