@@ -111,7 +111,7 @@ function Invoke-CreatePyEnv($Command, $Name) {
 # Create Python Environment using the VirtualEnv.exe command
 #
 function New-Python2Env($Python, $Name)  {
-    $Command = (Join-Path (Join-Path (Split-Path $Python -Parent) "Scripts") "virtualenv.exe'")
+    $Command = (Join-Path (Join-Path (Split-Path $Python -Parent) "Scripts") "virtualenv.exe")
     if ((Test-Path $Command) -eq $false) {
         Write-FormatedError "You must install virtualenv program to create the Python virtual environment '$Name'"
         return 
