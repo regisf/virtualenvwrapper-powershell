@@ -1,5 +1,9 @@
 # Changelog for VirtualEnvWrapper Powershell
 
+## 2020-01-28 (v0.2.0)
+	* Implement `mktmpenv` as an alias of `New-TemporaryVirtualEnv`
+	* Merge [rbierbasz](https://github.com/rbierbasz) pull request
+
 ## 2019-11-10 (v0.1.1)
 	* Partially merge Swiffer PR
 	* Start tagging

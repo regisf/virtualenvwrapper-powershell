@@ -247,7 +247,7 @@ function Workon {
         return
     }
 
-    . $activate_path
+    Load-Module $activate_path
 
     $Env:OLD_PYTHON_PATH = $Env:PYTHON_PATH
     $Env:VIRTUAL_ENV = "$new_pyenv"
@@ -307,7 +307,7 @@ function New-VirtualEnv()
     New-PythonEnv -Python $PythonRealPath -Name $Name
 
     foreach($Package in $Packages)  {
-        Invoke-Expression "$WORKON_HOME\$Name\Scripts\pip.exe install $Package"
+         Invoke-Expression "$WORKON_HOME\$Name\Scripts\pip.exe install $Package"
     }
 
 
@@ -387,28 +387,30 @@ function Remove-VirtualEnv {
     }
 }
 
-#
-# Get the current version of VirtualEnvWrapper
-#
+<#
+.Synopsis
+    Get the current version of VirtualEnvWrapper
+#>
 function Get-VirtualEnvVersion() {
     Write-Host "Version $Version"
 }
 
-#
-# Create a temporary environment
-#
+<#
+.Synopsis
+    Create a temporary environment. 
+#>
 function New-TemporaryVirtualEnv() {
     Param(
         [Parameter(HelpMessage="Change directory into the newly created virtual environment")]
         [alias("c")]
-        [switch]$Cd = $true,
+        [switch]
+        $Cd = $False,
 
         [Parameter(HelpMessage="Don't change directory")]
         [alias("n")]
         [switch]$NoCd = $false,
 
         # Reimplement New-VirtualEnv parameters
-
         [Parameter(HelpMessage="The requirements file")]
         [alias("r")]
         [string]$Requirement,
@@ -452,14 +454,13 @@ function New-TemporaryVirtualEnv() {
 
         # Write deactivation file. See Workon rewriting deactivate feature
         $post_deactivate_file_content = @"
-if ((Test-Path -Path `"$dest_dir/README.tmpenv`") -Eq `$true) {
+if ((est-Path -Path `"$dest_dir/README.tmpenv`") {
     Write-Host `"Removing temporary environment $uuid`"
     # Change the location else MS Windows will refuse to remove the directory
     Set-Location `"$WORKON_HOME`" 
     Remove-VirtualEnv $uuid
 }
 "@
-
         $post_deactivate_file_content | Out-File -FilePath "$WORKON_HOME/$uuid/postdeactivate.ps1"
 
         if ($Cd -Eq $true) {
