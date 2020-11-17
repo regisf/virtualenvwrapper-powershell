@@ -1,5 +1,9 @@
 # Changelog for VirtualEnvWrapper Powershell
 
+## 2020-11.17 (v0.1.2)
+	* Fix bug on Get-VirtualEnvs for user with space in name
+	* Fix uncomplete environment
+
 ## 2019-11-10 (v0.1.1)
 	* Partially merge Swiffer PR
 	* Start tagging
