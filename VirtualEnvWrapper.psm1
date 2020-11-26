@@ -23,7 +23,7 @@
 
 $WORKON_HOME=$Env:WORKON_HOME
 $VIRTUALENWRAPPER_HOOK_DIR=''
-$Version = "0.2.0"
+$Version = "0.1.3"
 
 #
 # Set the default path and create the directory if don't exist
@@ -238,7 +238,7 @@ function Workon {
     }
 
     if (Get-IsInPythonVenv -eq $true) {
-        Deactivate
+        deactivate        
     }
 
     $activate_path = "$new_pyenv\Scripts\Activate.ps1"
@@ -247,7 +247,7 @@ function Workon {
         return
     }
 
-    Load-Module $activate_path
+    Import-Module $activate_path
 
     $Env:OLD_PYTHON_PATH = $Env:PYTHON_PATH
     $Env:VIRTUAL_ENV = "$new_pyenv"
