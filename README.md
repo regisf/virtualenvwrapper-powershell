@@ -15,7 +15,7 @@ Just use the `Install.ps1` script:
 and the script will create required path if needed and install the `profile.ps1` file directly to 
 automaticly activate VirtualEnvWrapper when the shell is opened
 
-###Manual Installation 
+### Manual Installation 
 Put the file `VirtualEnvWrapper.psm1` into the directory `~\Documents\WindowsPowerShell\Modules`.
 Edit or create the file `~\Documents\WindowsPowerShell\Profile.ps1` (see )
 and add into the lines below :
