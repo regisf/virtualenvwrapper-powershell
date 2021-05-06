@@ -354,8 +354,8 @@ function Get-VirtualEnvs {
         for($i = 0; $i -lt $children.Length; $i++) {
             $child = $children[$i]
             try {
-                $PythonVersion = (((Invoke-Expression ("$WORKON_HOME\{0}\Scripts\Python.exe --version 2>&1" -f "$child")) -replace "`r|`n","") -Split " ")[1]
-                Write-host ("`t{0,-30}{1,-15}" -f $child,$PythonVersion)
+                $PythonVersion = (((Invoke-Expression ("$WORKON_HOME\{0}\Scripts\Python.exe --version 2>&1" -f $child.name)) -replace "`r|`n","") -Split " ")[1]
+                Write-host ("`t{0,-30}{1,-15}" -f $child.name,$PythonVersion)
             } catch {
                 $failed += $child
             }
