@@ -28,7 +28,7 @@ if ($key -eq "n")
 # Test powershell directories in ~\Documents. If don't exists create it
 if (!(Test-Path $InstallationPath)) 
 {
-    Write-Host "Creaate directory : $InstallationPath"
+    Write-Host "Create directory : $InstallationPath"
     New-Item -ItemType Directory -Force -Path $InstallationPath
 }
 
