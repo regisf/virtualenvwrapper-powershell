@@ -365,7 +365,7 @@ function Get-VirtualEnvs {
     }
     if ($failed.Length -gt 0) {
         Write-Host
-        Write-Host "`tAdditionnaly, one or more environments failed to be listed"
+        Write-Host "`tAdditionally, one or more environments failed to be listed"
         Write-Host "`t=========================================================="
         Write-Host
         foreach ($item in $failed) {
