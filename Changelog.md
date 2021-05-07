@@ -1,5 +1,8 @@
 # Changelog for VirtualEnvWrapper Powershell
 
+## 2021-05-07 (v.0.1.4)
+    * Fix various compatibility issues with PowerShell 7 (thanks to @mmorys and @dbellandi)
+
 ## 2020-11-26 (v0.1.3)
 	* Fix issue #21 due to working branch accidentaly merged on master
 

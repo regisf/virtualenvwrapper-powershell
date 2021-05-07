@@ -23,7 +23,7 @@
 
 $WORKON_HOME=$Env:WORKON_HOME
 $VIRTUALENWRAPPER_HOOK_DIR=''
-$Version = "0.1.3"
+$Version = "0.1.4"
 
 #
 # Set the default path and create the directory if don't exist
