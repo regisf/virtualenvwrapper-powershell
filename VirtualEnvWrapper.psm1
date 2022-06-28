@@ -247,7 +247,7 @@ function Workon {
         return
     }
 
-    Import-Module $activate_path
+    Import-Module $activate_path -Force
 
     $Env:OLD_PYTHON_PATH = $Env:PYTHON_PATH
     $Env:VIRTUAL_ENV = "$new_pyenv"
